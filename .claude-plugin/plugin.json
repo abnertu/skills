@@ -1,0 +1,14 @@
+{
+  "name": "abnertu",
+  "version": "0.1.0",
+  "description": "abnertu's agent skills.",
+  "author": {
+    "name": "abnertu",
+    "url": "https://github.com/abnertu"
+  },
+  "repository": "https://github.com/abnertu/skills",
+  "license": "MIT",
+  "skills": [
+    "./skills/setup-repo-docs"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "abnertu",
+  "owner": {
+    "name": "abnertu",
+    "url": "https://github.com/abnertu"
+  },
+  "description": "abnertu's agent skills for Claude Code and Codex.",
+  "plugins": [
+    {
+      "name": "abnertu",
+      "source": "./",
+      "description": "abnertu's agent skills."
+    }
+  ]
+}

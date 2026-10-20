@@ -3,6 +3,7 @@
 ## Skills
 
 - Each skill lives in `skills/<name>/SKILL.md`; the directory name matches the frontmatter `name`.
+- `.claude-plugin/` packages the repo as one plugin for both Claude Code and Codex. List every skill directory in `skills` of `plugin.json`.
 - Every skill runs in both Claude Code and Codex. Put Claude Code settings in `SKILL.md` frontmatter and Codex settings in `agents/openai.yaml`; a user-invoked skill sets both `disable-model-invocation: true` and `policy.allow_implicit_invocation: false`.
 - Read arguments from the text after the skill name. Codex documents no argument substitution, so skills avoid `$ARGUMENTS`.
 - Load the `writing-for-agents` skill before creating or editing a skill or this file.
@@ -13,7 +14,7 @@
 - Author commits as the user alone, with no `Co-Authored-By` or other co-author trailers.
 - Commit as the plan progresses. Before pushing, squash related commits into one to keep history clean.
 - Push only after the user approves that push.
-- Version releases with [Semantic Versioning 2.0.0](https://semver.org/).
+- Version releases with [Semantic Versioning 2.0.0](https://semver.org/) in the `version` of `.claude-plugin/plugin.json`. Installed plugins update only when it changes.
 
 ## Tests
 

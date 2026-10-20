@@ -12,26 +12,28 @@ Personal agent skills. Each skill is a `SKILL.md` that Claude Code and other age
 
 ## Install
 
-Clone the repo, then link a skill into each agent's user skills directory:
+Claude Code:
 
 ```sh
-git clone https://github.com/abnertu/skills.git && cd skills
+claude plugin marketplace add abnertu/skills
+claude plugin install abnertu@abnertu
+```
 
-# Claude Code
-ln -s "$PWD/skills/setup-repo-docs" ~/.claude/skills/setup-repo-docs
+Codex:
 
-# Codex
-ln -s "$PWD/skills/setup-repo-docs" ~/.agents/skills/setup-repo-docs
+```sh
+codex plugin marketplace add abnertu/skills
+codex plugin add abnertu@abnertu
 ```
 
 ## Usage
 
-Invoke the skill by name. Append a language keyword to set the README language:
+Invoke a skill by name. Append a language keyword to set the README language:
 
 | Agent | Command |
 | --- | --- |
-| Claude Code | `/setup-repo-docs English` |
-| Codex | `$setup-repo-docs English` |
+| Claude Code | `/abnertu:setup-repo-docs English` |
+| Codex | `$setup-repo-docs English`, or pick it from `/skills` |
 
 ## License
 
