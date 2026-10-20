@@ -16,14 +16,14 @@ Claude Code:
 
 ```sh
 claude plugin marketplace add abnertu/skills
-claude plugin install abnertu@abnertu
+claude plugin install abnertu-skills@abnertu
 ```
 
 Codex:
 
 ```sh
 codex plugin marketplace add abnertu/skills
-codex plugin add abnertu@abnertu
+codex plugin add abnertu-skills@abnertu
 ```
 
 ## Usage
@@ -32,7 +32,7 @@ Invoke a skill by name. Append a language keyword to set the README language:
 
 | Agent | Command |
 | --- | --- |
-| Claude Code | `/abnertu:setup-repo-docs English` |
+| Claude Code | `/abnertu-skills:setup-repo-docs English` |
 | Codex | `$setup-repo-docs English`, or pick it from `/skills` |
 
 ## License
