@@ -1,7 +1,7 @@
 ---
 name: setup-repo-docs
 description: Write a repository's README.md (user-facing) and AGENTS.md (agent-facing). Append a mode (`rewrite` or `optimize`) and a README language, e.g. `optimize 中文`.
-argument-hint: [rewrite|optimize] [language]
+argument-hint: "[rewrite|optimize] [language]"
 disable-model-invocation: true
 ---
 
