@@ -29,7 +29,7 @@ Prefer the host's native badge; fall back to shields.io where it has none.
 - Read runtime and framework versions from the manifest (`engines.node`, `project.requires-python`, the framework's dependency entry) through a shields.io dynamic badge (`dynamic/json`, `dynamic/toml`, `dynamic/yaml`) whose URL-encoded `url` is the manifest raw file.
 - Without a manifest version, use a static badge with the minimum version the docs or the host's repository description state, else the name alone. Use the name alone too when shields.io cannot fetch the manifest (private repo, internal host). The message is a version only, never an architecture.
 - Static badges: `https://img.shields.io/badge/<label>-<message>-<color>`, or `<label>-<color>` for a name alone. In each part write `_` for a space, `__` for an underscore, `--` for a dash and `%2B` for `+`.
-- Runtime and framework badges carry the brand's simple-icons logo and main color, with `logoColor=white`, or `black` on a light color: `https://img.shields.io/badge/Node.js-20%2B-5FA04E?logo=nodedotjs&logoColor=white`. A brand without a simple-icons logo gets no logo and `blue`.
+- Runtime and framework badges carry the brand's simple-icons logo and main color, with `logoColor=white`: the logo sits on the dark gray label, while shields.io picks the message text color itself. `https://img.shields.io/badge/Node.js-20%2B-5FA04E?logo=nodedotjs&logoColor=white`. A brand without a simple-icons logo gets no logo and `blue`.
 
 ## Verify
 
