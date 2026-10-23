@@ -1,7 +1,5 @@
 # skills
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-
 Personal agent skills. Each skill is a `SKILL.md` that Claude Code and other agents load.
 
 ## Skills
@@ -28,13 +26,9 @@ codex plugin add abnertu-skills@abnertu
 
 ## Usage
 
-Invoke a skill by name. Append a language keyword to set the README language:
+Invoke a skill by name. For `setup-repo-docs`, append a mode (`rewrite` replaces existing docs with the skill's structure; `optimize` keeps the repo's conventions and asks before writing) and a README language:
 
 | Agent | Command |
 | --- | --- |
-| Claude Code | `/abnertu-skills:setup-repo-docs English` |
-| Codex | `$setup-repo-docs English`, or pick it from `/skills` |
-
-## License
-
-[MIT](LICENSE)
+| Claude Code | `/abnertu-skills:setup-repo-docs optimize English` |
+| Codex | `$setup-repo-docs optimize English`, or pick it from `/skills` |

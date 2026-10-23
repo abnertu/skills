@@ -10,7 +10,7 @@
 
 ## Git
 
-- Write commits in [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) format.
+- Write commits in [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) format, with a body explaining why for non-trivial changes. Mark breaking changes with `!` and a `BREAKING CHANGE:` footer.
 - Author commits as the user alone, with no `Co-Authored-By` or other co-author trailers.
 - Commit as the plan progresses. Before pushing, squash related commits into one to keep history clean.
 - Push only after the user approves that push.
