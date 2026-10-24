@@ -2,6 +2,8 @@
 
 Personal agent skills. Each skill is a `SKILL.md` that Claude Code and other agents load.
 
+[![check](https://github.com/abnertu/skills/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/abnertu/skills/actions/workflows/check.yml)
+
 ## Skills
 
 | Skill | Purpose |
@@ -26,7 +28,7 @@ codex plugin add abnertu-skills@abnertu
 
 ## Usage
 
-Invoke a skill by its name. For `setup-repo-docs`, append a mode and a README language:
+Invoke a skill by its name. For `setup-repo-docs`, append a mode. Optionally, append a README language. Without it, the skill keeps the language of the existing README:
 
 - `rewrite` replaces the existing docs with the skill's structure.
 - `optimize` keeps the repo's conventions and asks before it writes.
