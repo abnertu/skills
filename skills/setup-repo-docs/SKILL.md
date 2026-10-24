@@ -13,7 +13,7 @@ Read the mode and the language from the text after the skill name. If a value is
 
 - **Mode** applies when a `README.md` or `AGENTS.md` exists. If neither exists, write both fresh and skip the mode.
   - `rewrite` (`重寫`): this skill is authoritative. Its structure and rules replace the existing docs. The existing docs still supply facts.
-  - `optimize` (`優化`): the repo is authoritative. Keep what is still accurate and merge it into the new structure. If a repo convention conflicts with the template, keep the repo's convention. List the conflict for the user.
+  - `optimize` (`優化`): the repo is authoritative. Keep what is still accurate and merge it into the new structure. If a repo convention conflicts with the template, keep the repo's convention. List the conflict for the user. A line on the subject of a template rule that adds nothing specific to the repo comes from an older template. Update it to the template.
   - Some rules need judgment: which sections to split, which docs need pointers, how complete a list is and which badges to show. If the existing docs already made such a call, keep it in both modes.
 - **Language** sets the README language (`中文`, `English`, `日本語`, ...). If no language is given, use the language of the existing `README.md`. Match the script of the keyword: `中文` is Traditional Chinese and `中文简体` is Simplified Chinese. Write `AGENTS.md` in English always.
 
@@ -145,7 +145,7 @@ Read the drafts again and check these points:
 - Each sentence carries information.
 - Each listed sentence is a description of 25 words or fewer, or a single list of items. Split the others.
 - Each English sentence obeys the other writing rules in the template's `## Docs` section.
-- A prohibition that repeats the positive instruction before it is deleted. Prohibitions stay only as guardrails, such as for secrets.
+- A prohibition that only repeats the positive instruction before it is deleted. A prohibition stays when it names a case or an item that the instruction does not name.
 - The README is in the settled language. A translation reads naturally and uses one term for each concept.
 - `AGENTS.md` holds each template rule or its repo replacement.
 - The doc pointers are under `## Docs`.

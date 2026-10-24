@@ -13,7 +13,18 @@ import re
 import sys
 
 LIMIT = 20
-SENTENCE_END = re.compile(r"(?<=[.!?])(?:\*\*|\*|_)?\s+(?=[A-Z`*\[(\"'])")
+SENTENCE_END = re.compile(r"[.!?](?:\*\*|\*|_)?\s+(?=\S)")
+ABBREVIATIONS = ("e.g.", "i.e.", "etc.", "vs.", "cf.")
+
+
+def sentences(text):
+    start = 0
+    for match in SENTENCE_END.finditer(text):
+        if text[: match.start() + 1].lower().endswith(ABBREVIATIONS):
+            continue
+        yield text[start : match.end()]
+        start = match.end()
+    yield text[start:]
 
 
 def words(text):
@@ -42,10 +53,10 @@ def check(path):
             cells = text.strip("|").split("|") if text.startswith("|") else [text]
             for cell in cells:
                 cell = re.sub(r"^(?:[-*+]|\d+\.)\s+", "", cell.strip())
-                for sentence in SENTENCE_END.split(cell):
+                for sentence in sentences(cell):
                     count = len(words(sentence))
                     if count > LIMIT:
-                        print(f"{path}:{number}: {count} words: {sentence}")
+                        print(f"{path}:{number}: {count} words: {sentence.strip()}")
 
 
 if __name__ == "__main__":
