@@ -26,7 +26,10 @@ codex plugin add abnertu-skills@abnertu
 
 ## Usage
 
-Invoke a skill by name. For `setup-repo-docs`, append a mode (`rewrite` replaces existing docs with the skill's structure; `optimize` keeps the repo's conventions and asks before writing) and a README language:
+Invoke a skill by its name. For `setup-repo-docs`, append a mode and a README language:
+
+- `rewrite` replaces the existing docs with the skill's structure.
+- `optimize` keeps the repo's conventions and asks before it writes.
 
 | Agent | Command |
 | --- | --- |

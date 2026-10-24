@@ -1,107 +1,151 @@
 ---
 name: setup-repo-docs
-description: Write a repository's README.md (user-facing) and AGENTS.md (agent-facing). Append a mode (`rewrite` or `optimize`) and a README language, e.g. `optimize 中文`.
+description: Write a repo's README.md (user-facing) and AGENTS.md (agent-facing). Append a mode (`rewrite` or `optimize`) and a README language, e.g. `optimize 中文`.
 argument-hint: "[rewrite|optimize] [language]"
 disable-model-invocation: true
 ---
 
-Write two documents for the current repository: `README.md` for users and `AGENTS.md` for agents, reconciling the other docs that overlap them. Every sentence in both carries information.
+Write `README.md` for users and `AGENTS.md` for agents in the current repo. Reconcile the other docs that overlap them.
 
 ## 1. Settle the mode and README language
 
-Read both from the text after the skill name. Ask for whichever is missing in one question and wait.
+Read the mode and the language from the text after the skill name. If one is missing, ask for it in one question and wait.
 
-- **Mode** applies when a `README.md` or `AGENTS.md` already exists. With neither, write both fresh and skip it.
-  - `rewrite` (`重寫`): this skill is authoritative. Its structure and explicit rules replace the existing docs, which still supply facts.
-  - `optimize` (`優化`): the repo is authoritative. Keep what is still accurate and merge it into the new structure. Where an existing convention conflicts with the template, keep the repo's and list the conflict for the user.
-  - In both modes, where a rule needs judgment (which sections to split, which docs need pointers, how complete a list is, which runtime or framework a badge shows) and the existing docs already made the call, keep it.
-- **Language** sets the README (`中文`, `English`, `日本語`, ...); match the script it is written in (`中文` → Traditional Chinese, `中文简体` → Simplified Chinese). `AGENTS.md` is always English.
+- **Mode** applies when a `README.md` or `AGENTS.md` exists. If neither exists, write both fresh and skip the mode.
+  - `rewrite` (`重寫`): this skill is authoritative. Its structure and rules replace the existing docs. The existing docs still supply facts.
+  - `optimize` (`優化`): the repo is authoritative. Keep what is still accurate and merge it into the new structure. If a repo convention conflicts with the template, keep the repo's convention. List the conflict for the user.
+  - Some rules need judgment: which sections to split, which docs need pointers, how complete a list is and which badges to show. If the existing docs already made such a call, keep it in both modes.
+- **Language** sets the README language (`中文`, `English`, `日本語`, ...). Match the script of the keyword: `中文` is Traditional Chinese and `中文简体` is Simplified Chinese. Write `AGENTS.md` in English always.
 
 ## 2. Survey the repo
 
-Read the package manifest (`package.json`, `pyproject.toml`, `Cargo.toml` and the like; lockfiles and CI files are not manifests), existing docs, CI config and entry points. Collect what the project is, how to install it and how to use it.
+Read the package manifest, such as `package.json`, `pyproject.toml` or `Cargo.toml`. Lockfiles and CI files are not manifests. Also read the existing docs, the CI config and the entry points. Collect what the project is, how to install it and how to use it.
 
-Identify the host from `git remote get-url origin`: GitHub, or GitLab (gitlab.com or a self-hosted instance, which `.gitlab-ci.yml` also signals). Note the owner or namespace (GitLab namespaces may nest subgroups), the project name and the default branch. With no remote, or a host that is neither, ask the user.
+Identify the host from `git remote get-url origin`. It is GitHub or GitLab, either gitlab.com or a self-hosted instance. A `.gitlab-ci.yml` also signals GitLab. Note the owner or namespace, the project name and the default branch. GitLab namespaces can contain subgroups. If there is no remote, or the host is neither, ask the user.
 
-Dig for `AGENTS.md` facts: unwritten conventions, gotchas and reasons behind choices that the code does not state. Look in git history (reverts, repeated fixes to one spot, commit bodies that explain a choice), code signals (`HACK`, `FIXME`, comments saying "must" or "never", `scripts/`, `.env.example`, unusual CI steps) and existing docs. Show the user the candidates with their sources and ask which hold and what else is unwritten; only confirmed facts enter `AGENTS.md`.
+Dig for `AGENTS.md` facts: unwritten conventions, gotchas and the reasons behind choices. Look in these places:
 
-Done when you can state the project's purpose in one sentence, name its install and usage commands from the files (asking the user for what the files do not settle, as in a new repo), name the host, namespace, project and default branch, and cite a `file:line`, commit or the user for every candidate fact.
+- Git history: reverts, repeated fixes to one spot and commit bodies that explain a choice.
+- Code signals: `HACK`, `FIXME`, comments that say "must" or "never", `scripts/`, `.env.example` and unusual CI steps.
+- The existing docs.
+
+Show the candidates to the user with their sources. Ask which candidates hold and what else is unwritten. Only confirmed facts go into `AGENTS.md`.
+
+This step is done when all of these are true:
+
+- You can state the project's purpose in one sentence.
+- You can name the install and usage commands from the files. Ask the user for what the files do not settle, as in a new repo.
+- You can name the host, the namespace, the project and the default branch.
+- Each candidate fact has a source: a `file:line`, a commit or the user.
 
 ## 3. Plan the other docs
 
-Sort every other doc into one kind and plan its action:
+Sort each other doc into one kind and plan its action:
 
 | Kind | Examples | Action |
 | --- | --- | --- |
-| Agent instructions tools load for this repo | `CLAUDE.md`, `GEMINI.md`, `.cursorrules`, `.github/copilot-instructions.md` | Merge into `AGENTS.md`. Reduce `CLAUDE.md` to the single line `@AGENTS.md`; propose deleting the rest. |
-| User docs overlapping the README | `docs/installation.md`, `docs/usage.md` | The README keeps the short form and links to the doc. |
-| Contributor docs overlapping `AGENTS.md` | `CONTRIBUTING.md`, `docs/development.md` | Each shared rule lives in one of the two; the other links to it. |
-| Everything else | `CHANGELOG.md`, `SECURITY.md`, ADRs, API docs, files the repo installs elsewhere | Leave as is. Note problems you find (stale commands, contradictions) for the report. |
+| Agent instructions that tools load for this repo | `CLAUDE.md`, `GEMINI.md`, `.cursorrules`, `.github/copilot-instructions.md` | Merge them into `AGENTS.md`. Reduce `CLAUDE.md` to the single line `@AGENTS.md`. Propose to delete the others. |
+| User docs that overlap the README | `docs/installation.md`, `docs/usage.md` | Keep the short form in the README and link to the doc. |
+| Contributor docs that overlap `AGENTS.md` | `CONTRIBUTING.md`, `docs/development.md` | Put each shared rule in one of the two files. Link to it from the other. |
+| All other docs | `CHANGELOG.md`, `SECURITY.md`, ADRs, API docs, files that the repo installs elsewhere | Leave them as they are. Note the problems you find, such as stale commands or contradictions, for the report. |
 
-When the README or `AGENTS.md` would carry a section that everyday readers skip whole, move it to `docs/` and leave a one-line link.
+Everyday readers skip some sections completely. Move such a section from the README or `AGENTS.md` to `docs/` and leave a one-line link.
 
-Done when every doc has a kind and a planned action.
+This step is done when each doc has a kind and a planned action.
 
 ## 4. Draft `README.md`
 
-Written for someone deciding whether to use the project, then using it:
+Write for a reader who decides whether to use the project, and then uses it:
 
 1. Title and one-line description.
-2. Badges, built by [`badges.md`](badges.md).
-3. Install. A requirement list names what users install separately, not base system utilities.
+2. Badges. Build them with [`badges.md`](badges.md).
+3. Install. List the requirements that users install separately. Base system utilities are not requirements.
 4. Usage: the shortest real example that works.
 
-Add a section only when users need it (configuration, supported platforms). Contributor workflow belongs in `AGENTS.md`.
+Add a section only when users need it, such as configuration or supported platforms. Put the contributor workflow in `AGENTS.md`.
 
-Done when every command and path in the draft comes from the survey.
+This step is done when each command and path in the draft comes from the survey.
 
 ## 5. Draft `AGENTS.md`
 
-Start from the template below and keep every section, including ones the repo does not use yet: each sets the rule for when it does. In `optimize` mode a conflicting repo convention replaces the template rule.
+Start from the template below. Keep each section, also the sections that the repo does not use yet: each one sets the rule for later. In `optimize` mode, a conflicting repo convention replaces the template rule.
 
-- Add confirmed repo facts an agent cannot find by looking. A line that only restates what the manifest, config or directory layout holds stays out; one that adds a reason, intent or prohibition stays. In `rewrite` mode this also prunes existing lines.
-- Put a fact about Git, tests or CI in that section; group the rest under `##` headings by topic. Existing lines and sections keep their place.
-- Under `## Docs`, give each doc an agent needs (other than `README.md`), or each directory of like guides, one pointer: `Read docs/architecture.md before changing module boundaries.` Move such pointers there from elsewhere in the file.
-- Sources go in your report to the user, not the file.
+- Add the confirmed repo facts that an agent cannot find by looking.
+- Leave out a line that only restates the manifest, the config or the directory layout. Keep a line that adds a reason, an intent or a prohibition. In `rewrite` mode, apply this rule to the existing lines too.
+- Put a fact about Git, tests or CI in that section. Group the other facts under `##` headings by topic. Existing lines and sections keep their place.
+- Under `## Docs`, give one pointer to each doc that an agent needs, other than `README.md`. A directory of similar guides gets one pointer. Example: `Read docs/architecture.md before you change module boundaries.` Move such pointers to `## Docs` from other parts of the file.
+- Put the sources in your report to the user, not in the file.
 
 ```markdown
 # AGENTS Instructions
 
 ## Git
 
-- Write commits in [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) format, with a body explaining why for non-trivial changes. Mark breaking changes with `!` and a `BREAKING CHANGE:` footer.
-- Author commits as the user alone, with no `Co-Authored-By` or other co-author trailers.
-- Commit as the plan progresses. Before pushing, squash related commits into one to keep history clean.
+- Write commits in [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) format.
+- For a non-trivial change, write a commit body that explains why.
+- Mark a breaking change with `!` and a `BREAKING CHANGE:` footer.
+- Author commits as the user alone, without `Co-Authored-By` or other co-author trailers.
+- Commit as the plan progresses.
+- Before you push, squash related commits into one commit to keep the history clean.
 - Push only after the user approves that push.
 - Version releases with [Semantic Versioning 2.0.0](https://semver.org/).
 
 ## Tests
 
-- A test enters the repo only when it guards behaviour no existing test covers and fails when that behaviour breaks. Weigh this before adding each one.
-- Run throwaway tests freely to check your work; keep them out of the repo unless they pass that bar.
+- Add a test to the repo only when it guards behaviour that no existing test covers.
+- The test must fail when that behaviour breaks. Weigh this before you add each test.
+- Run throwaway tests freely to check your work.
+- Keep throwaway tests out of the repo unless they meet the bar above.
 
 ## CI
 
-- Keep a CI check only when it catches a concrete failure no existing check covers; identify that failure before adding or retaining it. Apply the test admission rule to CI too.
-- Run repository entry points against real inputs or isolated fixtures. Reject duplicate checks, source-text assertions, copied inventories and checks that only prove a command or file exists.
-- Name workflows, jobs and steps by their target and action. Propagate command failures; missing prerequisites and skipped required coverage cannot count as success.
-- After changing these rules, audit the repository against them. Validate locally, then verify required CI on the pushed commit; report any uncovered contract or unavailable check.
+- Keep a CI check only when it catches a concrete failure that no existing check covers.
+- Identify that failure before you add or keep the check.
+- Apply the test rules to CI checks too.
+- Run the repo's entry points against real inputs or isolated fixtures.
+- Reject duplicate checks, source-text assertions, copied inventories and checks that only prove that a command or file exists.
+- Name each workflow, job and step by its target and its action.
+- Propagate command failures.
+- Count a missing prerequisite or skipped required coverage as a failure.
+- After you change these rules, audit the repo against them.
+- Validate changes locally. Then verify the required CI on the pushed commit.
+- Report each uncovered contract and each unavailable check.
 
 ## Docs
 
-- Keep this file, `README.md` and every other doc concise and plain: each sentence carries information, with no filler.
+- Keep each doc concise and plain. Each sentence must carry information.
+- Write English docs to the [ASD-STE100](https://www.asd-ste100.org/) writing rules:
+  - An instruction has 20 words or fewer. A description has 25 words or fewer.
+  - Give one instruction in each sentence.
+  - Write instructions in the imperative and in the active voice.
+  - Use one word for one meaning, and one meaning for one word.
 ```
 
-Done when every template rule is present, or replaced by a repo convention in `optimize` mode, and every added fact is confirmed.
+This step is done when each template rule is present, or a repo convention replaces it in `optimize` mode. Each added fact must be confirmed.
 
 ## 6. Review
 
-Reread both drafts: every sentence informs, the README is in the settled language, `AGENTS.md` holds every template rule or its repo replacement, doc pointers sit under `## Docs`, and every step 3 action is carried out. Verify every badge as [`badges.md`](badges.md) describes.
+Read both drafts again and check these points:
+
+- Each sentence carries information.
+- The README is in the settled language.
+- `AGENTS.md` holds each template rule or its repo replacement.
+- The doc pointers are under `## Docs`.
+- Each English sentence obeys the ASD-STE100 rules in the template.
+- Each action from step 3 is done.
+
+Verify each badge as [`badges.md`](badges.md) describes.
 
 ## 7. Write and commit
 
-In `rewrite` mode, or with no existing docs, write `README.md` and `AGENTS.md` directly. In `optimize` mode, show the diff and the listed conflicts, and write after the user approves. Creating, moving or deleting any other file waits for approval in every mode: list each with its reason.
+In `rewrite` mode, or when no docs exist, write `README.md` and `AGENTS.md` directly. In `optimize` mode, show the diff and the listed conflicts. Write after the user approves.
 
-After a move, merge or deletion, grep the repo for links to the old paths and anchors and fix them. Run `git diff --check` and the checks the repo's `AGENTS.md` prescribes for doc changes (its general validation when it names none); fix failures.
+To create, move or delete any other file, get approval in each mode. List each file with its reason.
 
-Commit everything in one commit: a Conventional Commits `docs:` message, or the repo's own convention in `optimize` mode. Pushing waits for the user. Report the commit, the badge results, the fact sources and the problems noted in untouched docs.
+After a move, merge or deletion, search the repo for links to the old paths and anchors. Fix those links.
+
+Run `git diff --check`. Also run the checks that the repo's `AGENTS.md` prescribes for doc changes. If it names none, run its general validation. Fix the failures.
+
+Commit all changes in one commit. Use a Conventional Commits `docs:` message, or the repo's own convention in `optimize` mode. Push only after the user approves.
+
+Report the commit, the badge results, the fact sources and the problems in the unchanged docs.
