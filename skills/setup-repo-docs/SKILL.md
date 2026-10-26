@@ -29,6 +29,13 @@ Dig for `AGENTS.md` facts: unwritten conventions, gotchas and the reasons behind
 - Code signals: `HACK`, `FIXME`, comments that say "must" or "never", `scripts/`, `.env.example` and unusual CI steps.
 - The existing docs.
 
+Sort each other project that the docs or the code name into one relation:
+
+- A **dependency**: this repo needs it, or integrates with it as an option.
+- A **consumer**: it uses this repo, and this repo does not need it.
+
+When this repo combines dependencies, find each task that two layers can both do. Examples are starting a process, writing a file and setting an environment variable. Note which layer does each task now.
+
 Show the candidates to the user with their sources. Ask which candidates hold and what else is unwritten. Only confirmed facts go into `AGENTS.md`.
 
 This step is done when all of these are true:
@@ -37,6 +44,7 @@ This step is done when all of these are true:
 - You can name the install and usage commands from the files. Ask the user for what the files do not settle, as in a new repo.
 - You can name the host, the namespace, the project and the default branch.
 - Each candidate fact has a source: a `file:line`, a commit or the user.
+- Each named project has a relation.
 
 ## 3. Plan the other docs
 
@@ -71,6 +79,12 @@ Write for a reader who decides whether to use the project, and then uses it:
 
 Add a section only when users need it, such as configuration or supported platforms. Put the contributor workflow in `AGENTS.md`.
 
+Name a project only from the side that depends on it:
+
+- Name each dependency. Remove each mention of a consumer.
+- State the contract of this repo instead: what it does, and what it leaves to the projects that use it.
+- When this repo combines dependencies, add a section that gives one owner to each shared task. Then no two layers do the same task.
+
 For a non-English README, write the English draft first, then translate it as the template's `## Docs` section describes. Write only the translation to the repo.
 
 This step is done when each command and path in the draft comes from the survey.
@@ -81,6 +95,7 @@ Start from the template below. Keep each section, also the sections that the rep
 
 - Add the confirmed repo facts that an agent cannot find by looking.
 - Leave out a line that only restates the manifest, the config or the directory layout. Keep a line that adds a reason, an intent or a prohibition. In `rewrite` mode, apply this rule to the existing lines too.
+- Record the ownership boundary. State which tasks the repo leaves to its users, or which dependency owns each shared task.
 - Put a fact about Git, tests or CI in that section. Group the other facts under `##` headings by topic. Existing lines and sections keep their place.
 - Under `## Docs`, give one pointer to each doc that an agent needs, other than `README.md`. A directory of similar guides gets one pointer. Example: `Read docs/architecture.md before you change module boundaries.` Move such pointers to `## Docs` from other parts of the file.
 - Put the sources in your report to the user, not in the file.
@@ -150,6 +165,7 @@ Read the drafts again and check these points:
 - `AGENTS.md` holds each template rule or its repo replacement.
 - The doc pointers are under `## Docs`.
 - Each action from step 3 is done.
+- The docs name no consumer, and each shared task has one owner.
 
 Verify each badge as [`badges.md`](badges.md) describes.
 
@@ -165,4 +181,4 @@ Run `git diff --check`. Also run the checks that the repo's `AGENTS.md` prescrib
 
 Commit all changes in one commit. Use a Conventional Commits `docs:` message, or the repo's own convention in `optimize` mode. Push only after the user approves.
 
-Report the commit, the badge results, the fact sources and the problems that you noted in the other docs.
+Report the commit, the badge results, the fact sources and the problems that you noted in the other docs. List each consumer mention that you removed. The user can then document the boundary in that consumer's repo.
