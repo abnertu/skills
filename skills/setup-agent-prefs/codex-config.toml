@@ -1,0 +1,6 @@
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+
+[tui]
+status_line = ["model-with-reasoning", "project-name", "run-state", "permissions", "context-remaining", "five-hour-limit", "weekly-limit", "fast-mode", "task-progress"]
+status_line_use_colors = true

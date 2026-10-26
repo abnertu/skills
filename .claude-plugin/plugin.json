@@ -1,6 +1,6 @@
 {
   "name": "abnertu-skills",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "abnertu's agent skills.",
   "author": {
     "name": "abnertu",
@@ -9,6 +9,8 @@
   "repository": "https://github.com/abnertu/skills",
   "license": "MIT",
   "skills": [
+    "./skills/converge",
+    "./skills/setup-agent-prefs",
     "./skills/setup-repo-docs"
   ]
 }
