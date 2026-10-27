@@ -36,7 +36,14 @@ Sort each other project that the docs or the code name into one relation:
 
 When this repo combines dependencies, find each task that two layers can both do. Examples are starting a process, writing a file and setting an environment variable. Note which layer does each task now.
 
-Show the candidates to the user with their sources. Ask which candidates hold and what else is unwritten. Only confirmed facts go into `AGENTS.md`.
+Keep only **standing rules** as candidates. A standing rule changes how an agent does later, unrelated tasks. A fact about one place or one failure is a **record**. Propose a home at its source for each record:
+
+- A comment at the code that it explains.
+- A test that guards the fixed failure, and a commit body that gives the cause.
+- An ADR or a doc under `docs/` for a decision.
+- An issue for an open problem.
+
+Show the candidates to the user with their sources. Ask which candidates hold and what else is unwritten. Only confirmed standing rules go into `AGENTS.md`.
 
 This step is done when all of these are true:
 
@@ -95,8 +102,10 @@ Start from the template below. Keep each section, also the sections that the rep
 
 - Add the confirmed repo facts that an agent cannot find by looking.
 - Leave out a line that only restates the manifest, the config or the directory layout. Keep a line that adds a reason, an intent or a prohibition. In `rewrite` mode, apply this rule to the existing lines too.
+- Move each existing record to its source, in both modes. List each move in the report.
+- Add the lines for the repo's host from [`ci.md`](ci.md) to `## CI`.
 - Record the ownership boundary. State which tasks the repo leaves to its users, or which dependency owns each shared task.
-- Put a fact about Git, tests or CI in that section. Group the other facts under `##` headings by topic. Existing lines and sections keep their place.
+- Put a fact about Git, releases, tests or CI in that section. Group the other facts under `##` headings by topic. Existing lines and sections keep their place.
 - Under `## Docs`, give one pointer to each doc that an agent needs, other than `README.md`. A directory of similar guides gets one pointer. Example: `Read docs/architecture.md before you change module boundaries.` Move such pointers to `## Docs` from other parts of the file.
 - Put the sources in your report to the user, not in the file.
 
@@ -106,13 +115,25 @@ Start from the template below. Keep each section, also the sections that the rep
 ## Git
 
 - Write commits in [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) format.
+- Start the type, the scope and the description in lowercase. Keep the case of code identifiers and proper nouns.
 - For a non-trivial change, write a commit body that explains why.
 - Mark a breaking change with `!` and a `BREAKING CHANGE:` footer.
-- Author commits as the user alone, without `Co-Authored-By` or other co-author trailers.
+- Author commits as the user alone. Add no agent trailers or links, such as `Co-Authored-By` or a session URL.
 - Commit as the plan progresses.
 - Before you push, squash related commits into one commit to keep the history clean.
 - Push only after the user approves that push.
+
+## Releases
+
 - Version releases with [Semantic Versioning 2.0.0](https://semver.org/).
+- Name each release tag with the bare version, such as `1.2.3`. If the repo already uses a tag prefix, such as `v`, keep it.
+- Release in this order:
+  1. Update the version files and the changelog in one commit, such as `chore(release): prepare 1.2.3`.
+  2. Push the commit to the default branch.
+  3. Wait until the branch pipeline of that commit passes.
+  4. Tag that commit with an annotated tag: `git tag -a 1.2.3 -m "Release 1.2.3" <commit>`. Tag a release candidate as `1.2.3-rc.1`.
+  5. Push the tag alone: `git push origin 1.2.3`. The tag pipeline publishes the package and creates the release.
+- Push the commit and the tag in separate pushes. Do not use `git push --follow-tags`. One push starts two overlapping pipelines, and a single runner queues the tag pipeline.
 
 ## Tests
 
@@ -131,6 +152,11 @@ Start from the template below. Keep each section, also the sections that the rep
 - Name each workflow, job and step by its target and its action.
 - Propagate command failures.
 - Count a missing prerequisite or skipped required coverage as a failure.
+- Run the checks in branch pipelines only. A tag pipeline builds, smoke-tests and publishes the package, and then creates the release.
+- Start each release job with a check that the tagged commit is on the default branch.
+- Match release jobs to the tag format of the version, such as `/^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$/`.
+- Protect the release tags. Only protected refs can read the release credentials.
+- A tag pipeline uses the CI config of the tagged commit. Merge a CI change to the default branch before you tag.
 - After you change these rules, audit the repo against them.
 - Validate changes locally. Then verify the required CI on the pushed commit.
 - Report each uncovered contract and each unavailable check.
@@ -138,6 +164,8 @@ Start from the template below. Keep each section, also the sections that the rep
 ## Docs
 
 - Keep each doc concise and plain. Each sentence must carry information.
+- Write only standing rules in `AGENTS.md`. A standing rule changes how an agent does later, unrelated tasks.
+- Record a fact about one place or one failure at its source: a code comment, a test, a commit body, an ADR or an issue.
 - Write English docs in US English, to the [ASD-STE100](https://www.asd-ste100.org/) writing rules:
   - Give one instruction in each sentence.
   - Write instructions in the imperative and in the active voice.
@@ -162,7 +190,8 @@ Read the drafts again and check these points:
 - Each English sentence obeys the other writing rules in the template's `## Docs` section.
 - A prohibition that only repeats the positive instruction before it is deleted. A prohibition stays when it names a case or an item that the instruction does not name.
 - The README is in the settled language. A translation reads naturally and uses one term for each concept.
-- `AGENTS.md` holds each template rule or its repo replacement.
+- `AGENTS.md` holds each template rule or its repo replacement, and the host lines from `ci.md`.
+- `AGENTS.md` holds no record.
 - The doc pointers are under `## Docs`.
 - Each action from step 3 is done.
 - The docs name no consumer, and each shared task has one owner.

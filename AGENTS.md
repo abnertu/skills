@@ -13,9 +13,10 @@
 ## Git
 
 - Write commits in [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) format.
+- Start the type, the scope and the description in lowercase. Keep the case of code identifiers and proper nouns.
 - For a non-trivial change, write a commit body that explains why.
 - Mark a breaking change with `!` and a `BREAKING CHANGE:` footer.
-- Author commits as the user alone, without `Co-Authored-By` or other co-author trailers.
+- Author commits as the user alone. Add no agent trailers or links, such as `Co-Authored-By` or a session URL.
 - Commit as the plan progresses.
 - Before you push, squash related commits into one commit to keep the history clean.
 - Push only after the user approves that push.
