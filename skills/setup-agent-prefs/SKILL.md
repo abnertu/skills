@@ -12,11 +12,16 @@ Apply the same personal preferences to Claude Code and Codex, from either runtim
 | [`statusline.sh`](statusline.sh) | `~/.claude/statusline.sh`, which the `statusLine` key runs |
 | [`codex-config.toml`](codex-config.toml) | Keys in `~/.codex/config.toml` |
 
-Change only the keys in these files. Keep each other key, because both tools and the user write to the same files. Never print a secret or read an auth file. Show only the keys that this skill changes, because the settings files can hold tokens.
+- Change only the keys in these files.
+- Keep each other key, because both tools and the user write to the same files.
+- Never print a secret or read an auth file.
+- Show only the keys that this skill changes, because the settings files can hold tokens.
 
 ## 1. Check the prerequisites
 
-Run `command -v claude codex node jq`. The status line needs `jq`, and codex-plugin-cc needs `node`. List each missing command for the user and ask how to install it. Install nothing without approval.
+1. Run `command -v claude codex node jq`. The status line needs `jq`, and codex-plugin-cc needs `node`.
+2. List each missing command for the user and ask how to install it.
+3. Install nothing without approval.
 
 ## 2. Plan the changes
 
@@ -34,7 +39,9 @@ Compare each wanted value with the current state:
 | Claude Code | `openai/codex-plugin-cc` | `codex@openai-codex` |
 | Codex | `abnertu/skills` | `abnertu-skills@abnertu` |
 
-Add a missing marketplace with `<tool> plugin marketplace add <repo>`. Install a missing plugin with `claude plugin install` or `codex plugin add`. Refresh the present ones with `claude plugin marketplace update`, `claude plugin update <plugin>` and `codex plugin marketplace upgrade`.
+1. Add a missing marketplace with `<tool> plugin marketplace add <repo>`.
+2. Install a missing plugin with `claude plugin install` or `codex plugin add`.
+3. Refresh the present ones with `claude plugin marketplace update`, `claude plugin update <plugin>` and `codex plugin marketplace upgrade`.
 
 This step is done when each difference has a planned edit or command.
 
@@ -42,7 +49,9 @@ This step is done when each difference has a planned edit or command.
 
 Show the user each changed key with its old and new value, and each command. Apply the changes after the user approves.
 
-Edit the files in place. Keep the formatting and the comments of `~/.codex/config.toml`. Copy `statusline.sh` to `~/.claude/statusline.sh` and make it executable.
+1. Edit the files in place. Keep the formatting and the comments of `~/.codex/config.toml`.
+2. Copy `statusline.sh` to `~/.claude/statusline.sh`.
+3. Make `~/.claude/statusline.sh` executable.
 
 ## 4. Set up codex-plugin-cc
 

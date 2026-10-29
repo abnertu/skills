@@ -54,7 +54,9 @@ Read the text after the skill name.
 
 ## 2. Plan
 
-Survey the repo before you write the plan. Read its `AGENTS.md` or `CLAUDE.md`, the code that the task touches and the related tests. Ask the user about each choice that the files do not settle.
+1. Survey the repo before you write the plan.
+2. Read its `AGENTS.md` or `CLAUDE.md`, the code that the task touches and the related tests.
+3. Ask the user about each choice that the files do not settle.
 
 Write the plan file:
 
@@ -77,7 +79,10 @@ A full review uses a reviewer with fresh context in each round: a subagent, or C
 
 Give the reviewer the plan file path and this instruction:
 
-> Review this plan against the repo. Find missing steps, wrong assumptions about the code, done criteria that cannot be checked, unhandled failure cases, and conflicts with the repo's rules. For each finding, give the concrete failure that it causes. Tag each finding `defect`, `decision` or `backlog`.
+> 1. Review this plan against the repo.
+> 2. Find missing steps, wrong assumptions about the code, done criteria that cannot be checked, unhandled failure cases, and conflicts with the repo's rules.
+> 3. For each finding, give the concrete failure that it causes.
+> 4. Tag each finding `defect`, `decision` or `backlog`.
 
 Sort each finding:
 
@@ -87,17 +92,40 @@ Sort each finding:
 
 Log each round in **Review log** with its finding counts. After you fix the defects, start a new round. The loop converges on a clean pass with no open decision.
 
-If five rounds pass without convergence, stop. Show the user the open defects. A plan that does not converge is usually too large: propose a split into smaller plans.
+If five rounds pass without convergence:
 
-Show the user the converged plan. Implement it after the user approves. Set **Status** to `approved` and record **Base**. This is a session boundary.
+1. Stop.
+2. Show the user the open defects.
+3. Propose a split into smaller plans.
+
+A plan that does not converge is usually too large.
+
+Show the user the converged plan. After the user approves:
+
+1. Set **Status** to `approved`.
+2. Record **Base**.
+3. Implement the plan.
+
+This is a session boundary.
 
 ## 4. Implement
 
-Set **Status** to `implementing`. Do the steps in order. Commit as the repo's rules say. Check off each step in the plan file and update **Next**. Each step commit is a session boundary.
+1. Set **Status** to `implementing`.
+2. Do the steps in order.
+3. Commit as the repo's rules say.
+4. Check off each step in the plan file and update **Next**.
+
+Each step commit is a session boundary.
 
 Use any skill that fits a step, such as a design, test-driven development or debugging skill.
 
-If the work shows that the plan is wrong, stop the step. Fix the plan and run step 3 again on the changed part. A change to the scope or the done criteria needs the user's approval.
+If the work shows that the plan is wrong:
+
+1. Stop the step.
+2. Fix the plan.
+3. Run step 3 again on the changed part.
+
+A change to the scope or the done criteria needs the user's approval.
 
 ## 5. Verify until it converges
 
@@ -129,13 +157,18 @@ At each session boundary, judge whether the current session should continue. Jud
 - **Compact**: the next step continues the current work, and the context holds much material that the rest of the plan does not need. Examples are long logs and large file reads. Tell the user to run `/compact`.
 - Otherwise, continue without a hint.
 
-Give the hint in one line. Update **Next** before you give it. Then end the turn, so that the user can act on it.
+1. Update **Next** before you give the hint.
+2. Give the hint in one line.
+3. End the turn, so that the user can act on it.
 
 ## Resume
 
 1. Read the plan file. Start from **Status** and **Next**.
 2. If **Status** is `planning`, continue at step 2 or step 3. The plan has no **Base** yet.
-3. Otherwise, run `git log --oneline <Base>..HEAD` and `git status`. Compare them with the checked steps and **Next**. Fix the plan file where it differs from Git.
+3. Otherwise:
+   1. Run `git log --oneline <Base>..HEAD` and `git status`.
+   2. Compare them with the checked steps and **Next**.
+   3. Fix the plan file where it differs from Git.
 4. Continue from the step that **Status** names.
 
 ## Status report
@@ -146,9 +179,19 @@ List each plan in `.plans/` with its status, its next action, its unchecked done
 
 The `codex` option needs Claude Code with codex-plugin-cc. In another runtime, tell the user and continue without Codex.
 
-Ask the user in one question which model and which effort Codex uses. Offer the `model` and `model_reasoning_effort` of `~/.codex/config.toml` as the default. The efforts are `none`, `minimal`, `low`, `medium`, `high` and `xhigh`.
+Ask the user in one question which model and which effort Codex uses. Offer the `model` and `model_reasoning_effort` of `~/.codex/config.toml` as the default. The efforts are:
+
+- `none`
+- `minimal`
+- `low`
+- `medium`
+- `high`
+- `xhigh`
 
 Run Codex through the `codex:codex-rescue` subagent. Pass `--model <model> --effort <effort>` in each request.
 
 - **Review**: ask for a read-only run. Give the plan file path, the diff range for a code review, and the reviewer instruction from step 3.
-- **Delegated work**: ask for a write run for one plan step. Give the step, the plan file path and the files that the step changes. Check the result against the step before you check the step off.
+- **Delegated work**:
+  1. Ask for a write run for one plan step.
+  2. Give the step, the plan file path and the files that the step changes.
+  3. Check the result against the step before you check the step off.

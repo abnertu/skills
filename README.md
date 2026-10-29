@@ -30,7 +30,11 @@ codex plugin add abnertu-skills@abnertu
 
 ## Usage
 
-Invoke a skill by its name. For `converge`, append the task. Append `codex` to use Codex for reviews and delegated work. Codex use needs Claude Code with [codex-plugin-cc](https://github.com/openai/codex-plugin-cc).
+1. Invoke a skill by its name.
+2. For `converge`, append the task.
+3. For `converge`, append `codex` to use Codex for reviews and delegated work.
+
+Codex use needs Claude Code with [codex-plugin-cc](https://github.com/openai/codex-plugin-cc).
 
 For `setup-repo-docs`, append a mode. Optionally, append a README language. Without it, the skill keeps the language of the existing README:
 

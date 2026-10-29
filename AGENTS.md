@@ -52,7 +52,12 @@
   - Write instructions in the imperative and in the active voice.
   - Use one word for one meaning, and one meaning for one word.
   - An instruction has 20 words or fewer. A description has 25 words or fewer.
-- Review each sentence over these limits. Split it if it holds more than one instruction or fact. A list of items can stay in one sentence. Make a bullet list from more than five items.
+- Review each sentence over these limits. Split it if it holds more than one instruction or fact.
+- Use a numbered list for three or more instructions in a fixed order, also across sentences.
+- Write a set of full-sentence items, or of more than five items, as a bullet list. Otherwise, the set can stay in one sentence, even when the sentence is over the limits.
 - Write a non-English doc in two passes:
   1. Write an English draft to these rules.
-  2. Translate the draft. Keep its sentence boundaries and one term for each concept. Keep commands, paths and code unchanged. Use the natural word order of the target language.
+  2. Translate the draft:
+     1. Keep its sentence boundaries and one term for each concept.
+     2. Keep commands, paths and code unchanged.
+     3. Use the natural word order of the target language.

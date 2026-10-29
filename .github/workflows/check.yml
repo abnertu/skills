@@ -1,4 +1,4 @@
-name: check
+name: Validate skills
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   check:
-    name: Validate skill metadata and plugin manifests
+    name: Validate skill metadata and sentence checks
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -27,3 +27,6 @@ jobs:
 
       - name: Validate skill metadata and plugin manifests
         run: '"$RUNNER_TEMP/venv/bin/python" scripts/check-skills.py'
+
+      - name: Test sentence checker
+        run: '"$RUNNER_TEMP/venv/bin/python" tests/test_check_sentences.py -v'

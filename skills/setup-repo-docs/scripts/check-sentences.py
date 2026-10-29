@@ -15,6 +15,7 @@ import sys
 LIMIT = 20
 SENTENCE_END = re.compile(r"[.!?](?:\*\*|\*|_)?\s+(?=\S)")
 ABBREVIATIONS = ("e.g.", "i.e.", "etc.", "vs.", "cf.")
+FENCE = re.compile(r"(`{3,}|~{3,})(.*)")
 
 
 def sentences(text):
@@ -35,7 +36,8 @@ def words(text):
 
 
 def check(path):
-    in_code = in_front = False
+    fence = None
+    in_front = False
     with open(path, encoding="utf-8") as handle:
         for number, line in enumerate(handle, 1):
             text = line.strip()
@@ -45,10 +47,21 @@ def check(path):
             if in_front:
                 in_front = text != "---"
                 continue
-            if text.startswith(("```", "~~~")):
-                in_code = not in_code
-                continue
-            if in_code or not text or text.startswith(("#", "[![", "<!--")):
+            match = FENCE.match(text)
+            if match:
+                marker, info = match.groups()
+                if fence is not None:
+                    if (
+                        marker[0] == fence[0]
+                        and len(marker) >= len(fence)
+                        and not info.strip()
+                    ):
+                        fence = None
+                    continue
+                if marker[0] != "`" or "`" not in info:
+                    fence = marker
+                    continue
+            if fence is not None or not text or text.startswith(("#", "[![", "<!--")):
                 continue
             cells = text.strip("|").split("|") if text.startswith("|") else [text]
             for cell in cells:

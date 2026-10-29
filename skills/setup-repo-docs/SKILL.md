@@ -19,14 +19,22 @@ Read the mode and the language from the text after the skill name. If a value is
 
 ## 2. Survey the repo
 
-Read the package manifest, such as `package.json`, `pyproject.toml` or `Cargo.toml`. Lockfiles and CI files are not manifests. Also read the existing docs, the CI config and the entry points. Collect what the project is, how to install it and how to use it.
+1. Read the package manifest, such as `package.json`, `pyproject.toml` or `Cargo.toml`. Lockfiles and CI files are not manifests.
+2. Read the existing docs, the CI config and the entry points.
+3. Collect what the project is, how to install it and how to use it.
 
 Identify the host from `git remote get-url origin`. It is GitHub or GitLab, either gitlab.com or a self-hosted instance. A `.gitlab-ci.yml` also signals GitLab. Note the owner or namespace, the project name and the default branch. GitLab namespaces can contain subgroups. If there is no remote, or the host is neither, ask the user.
 
 Dig for `AGENTS.md` facts: unwritten conventions, gotchas and the reasons behind choices. Look in these places:
 
 - Git history: reverts, repeated fixes to one spot and commit bodies that explain a choice.
-- Code signals: `HACK`, `FIXME`, comments that say "must" or "never", `scripts/`, `.env.example` and unusual CI steps.
+- Code signals:
+  - `HACK`
+  - `FIXME`
+  - Comments that say "must" or "never".
+  - `scripts/`
+  - `.env.example`
+  - Unusual CI steps.
 - The existing docs.
 
 Sort each other project that the docs or the code name into one relation:
@@ -66,7 +74,7 @@ Sort each other doc into one kind and plan its action:
 
 Everyday readers skip some sections completely. Move such a section from the README or `AGENTS.md` to `docs/` and leave a one-line link.
 
-Rewrite the wording of each other doc to the writing rules in the template's `## Docs` section. Change only the wording, not the facts or the rules. Keep these parts unchanged:
+Rewrite the wording of each other doc to the writing rules in the template's `## Docs` section. Change only the wording and the list format, not the facts or the rules. Keep these parts unchanged:
 
 - Headings, because links point to their anchors.
 - Code blocks, and text that tests or tools read.
@@ -84,6 +92,10 @@ Write for a reader who decides whether to use the project, and then uses it:
 3. Install. List the requirements that users install separately. Base system utilities are not requirements.
 4. Usage: the shortest real example that works.
 
+- Write each README shell command without a shell prompt sign, such as `$`.
+- Keep `$` when it is part of the command or invocation, such as `$setup-repo-docs` or `$HOME`.
+- Show command output, if any, in a separate code block.
+
 Add a section only when users need it, such as configuration or supported platforms. Put the contributor workflow in `AGENTS.md`.
 
 Name a project only from the side that depends on it:
@@ -92,7 +104,11 @@ Name a project only from the side that depends on it:
 - State the contract of this repo instead: what it does, and what it leaves to the projects that use it.
 - When this repo combines dependencies, add a section that gives one owner to each shared task. Then no two layers do the same task.
 
-For a non-English README, write the English draft first, then translate it as the template's `## Docs` section describes. Write only the translation to the repo.
+For a non-English README:
+
+1. Write the English draft.
+2. Translate it as the template's `## Docs` section describes.
+3. Write only the translation to the repo.
 
 This step is done when each command and path in the draft comes from the survey.
 
@@ -127,6 +143,7 @@ Start from the template below. Keep each section, also the sections that the rep
 
 - Version releases with [Semantic Versioning 2.0.0](https://semver.org/).
 - Name each release tag with the bare version, such as `1.2.3`. If the repo already uses a tag prefix, such as `v`, keep it.
+- When you create a changelog, use [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) format. Keep the format of an existing changelog.
 - Release in this order:
   1. Update the version files and the changelog in one commit, such as `chore(release): prepare 1.2.3`.
   2. Push the commit to the default branch.
@@ -171,32 +188,38 @@ Start from the template below. Keep each section, also the sections that the rep
   - Write instructions in the imperative and in the active voice.
   - Use one word for one meaning, and one meaning for one word.
   - An instruction has 20 words or fewer. A description has 25 words or fewer.
-- Review each sentence over these limits. Split it if it holds more than one instruction or fact. A list of items can stay in one sentence. Make a bullet list from more than five items.
+- Review each sentence over these limits. Split it if it holds more than one instruction or fact.
+- Use a numbered list for three or more instructions in a fixed order, also across sentences.
+- Write a set of full-sentence items, or of more than five items, as a bullet list. Otherwise, the set can stay in one sentence, even when the sentence is over the limits.
 - Write a non-English doc in two passes:
   1. Write an English draft to these rules.
-  2. Translate the draft. Keep its sentence boundaries and one term for each concept. Keep commands, paths and code unchanged. Use the natural word order of the target language.
+  2. Translate the draft:
+     1. Keep its sentence boundaries and one term for each concept.
+     2. Keep commands, paths and code unchanged.
+     3. Use the natural word order of the target language.
 ```
 
 This step is done when each template rule is present, or a repo convention replaces it in `optimize` mode. Each added fact must be confirmed.
 
 ## 6. Review
 
-Run `python3 <skill-dir>/scripts/check-sentences.py FILE...` on each English doc that you drafted or rewrote. `<skill-dir>` is the directory of this `SKILL.md`. For a translated doc, check its English draft in a temporary file outside the repo. The script lists the sentences over 20 words.
+1. Run `python3 <skill-dir>/scripts/check-sentences.py FILE...` on each English doc that you drafted or rewrote. `<skill-dir>` is the directory of this `SKILL.md`. For a translated doc, check its English draft in a temporary file outside the repo. The script lists the sentences over 20 words.
 
-Read the drafts again and check these points:
+2. Read the drafts again and check these points:
 
-- Each sentence carries information.
-- Each listed sentence is a description of 25 words or fewer, or a single list of items. Split the others.
-- Each English sentence obeys the other writing rules in the template's `## Docs` section.
-- A prohibition that only repeats the positive instruction before it is deleted. A prohibition stays when it names a case or an item that the instruction does not name.
-- The README is in the settled language. A translation reads naturally and uses one term for each concept.
-- `AGENTS.md` holds each template rule or its repo replacement, and the host lines from `ci.md`.
-- `AGENTS.md` holds no record.
-- The doc pointers are under `## Docs`.
-- Each action from step 3 is done.
-- The docs name no consumer, and each shared task has one owner.
+   - Each sentence carries information.
+   - Each sentence in the script output is a description of 25 words or fewer, or a set of five or fewer items. Split the others.
+   - Each draft obeys the other writing rules in the template's `## Docs` section.
+   - README commands, invocations and output follow the formatting rules in step 4.
+   - A prohibition that only repeats the positive instruction before it is deleted. A prohibition stays when it names a case or an item that the instruction does not name.
+   - The README is in the settled language. A translation reads naturally and uses one term for each concept.
+   - `AGENTS.md` holds each template rule or its repo replacement, and the host lines from `ci.md`.
+   - `AGENTS.md` holds no record.
+   - The doc pointers are under `## Docs`.
+   - Each action from step 3 is done.
+   - The docs name no consumer, and each shared task has one owner.
 
-Verify each badge as [`badges.md`](badges.md) describes.
+3. Verify each badge as [`badges.md`](badges.md) describes.
 
 ## 7. Write and commit
 
@@ -206,8 +229,12 @@ To create, move or delete any other file, get approval in each mode. List each f
 
 After a move, merge or deletion, search the repo for links to the old paths and anchors. Fix those links.
 
-Run `git diff --check`. Also run the checks that the repo's `AGENTS.md` prescribes for doc changes. If it names none, run its general validation. Fix the failures.
+1. Run `git diff --check`.
+2. Run the checks that the repo's `AGENTS.md` prescribes for doc changes. If it names none, run its general validation.
+3. Fix the failures.
 
-Commit all changes in one commit. Use a Conventional Commits `docs:` message, or the repo's own convention in `optimize` mode. Push only after the user approves.
+4. Use a Conventional Commits `docs:` message, or the repo's own convention in `optimize` mode.
+5. Commit all changes in one commit.
+6. Push only after the user approves.
 
 Report the commit, the badge results, the fact sources and the problems that you noted in the other docs. List each consumer mention that you removed. The user can then document the boundary in that consumer's repo.
