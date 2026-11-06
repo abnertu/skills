@@ -119,7 +119,7 @@ Start from the template below. Keep each section, also the sections that the rep
 - Add the confirmed repo facts that an agent cannot find by looking.
 - Leave out a line that only restates the manifest, the config or the directory layout. Keep a line that adds a reason, an intent or a prohibition. In `rewrite` mode, apply this rule to the existing lines too.
 - Move each existing record to its source, in both modes. List each move in the report.
-- Add the lines for the repo's host from [`ci.md`](ci.md) to `## CI`.
+- Add the shared naming rules and the repo's host block from [`ci.md`](ci.md) to `## CI`.
 - Record the ownership boundary. State which tasks the repo leaves to its users, or which dependency owns each shared task.
 - Put a fact about Git, releases, tests or CI in that section. Group the other facts under `##` headings by topic. Existing lines and sections keep their place.
 - Under `## Docs`, give one pointer to each doc that an agent needs, other than `README.md`. A directory of similar guides gets one pointer. Example: `Read docs/architecture.md before you change module boundaries.` Move such pointers to `## Docs` from other parts of the file.
@@ -166,7 +166,6 @@ Start from the template below. Keep each section, also the sections that the rep
 - Apply the test rules to CI checks too.
 - Run the repo's entry points against real inputs or isolated fixtures.
 - Reject duplicate checks, source-text assertions, copied inventories and checks that only prove that a command or file exists.
-- Name each workflow, job and step by its target and its action.
 - Propagate command failures.
 - Count a missing prerequisite or skipped required coverage as a failure.
 - Run the checks in branch pipelines only. A tag pipeline builds, smoke-tests and publishes the package, and then creates the release.

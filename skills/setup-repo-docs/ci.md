@@ -1,22 +1,43 @@
-# CI host lines
+# CI conventions
 
-Add the block for the repo's host to `## CI` in `AGENTS.md`. Replace `<tag-pattern>` with the tag format of the repo. In `optimize` mode, keep a CI layout that the repo already uses for the same rule.
+Add the shared naming rules and the repo's host block to `## CI` in `AGENTS.md`.
+Replace `<tag-pattern>` with the repo's tag format.
+In `optimize` mode, keep an existing CI layout that implements the same rule.
+
+## Shared naming rules
+
+```markdown
+- Name CI files in kebab-case by purpose, such as `deploy-production.yml`.
+- Keep reserved host filenames, including `.gitlab-ci.yml`.
+- Name workflows in Title Case, such as `Deploy Production`.
+- Keep the repository name out of workflow names.
+- Name job IDs in snake_case, such as `build_image`.
+- Start each GitHub step name with a verb, such as `Install Dependencies` or `Run Tests`.
+- Preserve proper nouns and code identifiers when applying case.
+- Prefer a specific purpose, such as `deploy-production.yml`, over a vague name, such as `production.yml`.
+- Omit redundant host or artifact words, as in `github-action-build.yml` and `build-workflow.yml`.
+- Name each workflow, job and step by its target and action.
+- Keep job display names unique within the repository.
+- Update dispatch references, dependencies, release gates, required check contexts and badges together when renaming CI artifacts.
+```
 
 ## GitLab
 
 ````markdown
-- Make each check job extend `.branch-pipeline-only`:
+- Keep the dot prefix on hidden job IDs, and use snake_case after it.
+- Apply step-name rules only where the CI host exposes named steps.
+- Make each check job extend `.branch_pipeline_only`:
   ```yaml
-  .skip-tag-pipeline:
+  .skip_tag_pipeline:
     rules:
       - if: $CI_COMMIT_TAG
         when: never
-  .branch-pipeline-only:
+  .branch_pipeline_only:
     rules:
-      - !reference [.skip-tag-pipeline, rules]
+      - !reference [.skip_tag_pipeline, rules]
       - when: on_success
   ```
-- A job's own `rules` replace the inherited `rules`. Start such a job's `rules` with `- !reference [.skip-tag-pipeline, rules]`. Never reference `.branch-pipeline-only` there: its last rule matches before the job's own rules.
+- A job's own `rules` replace the inherited `rules`. Start such a job's `rules` with `- !reference [.skip_tag_pipeline, rules]`. Never reference `.branch_pipeline_only` there: its last rule matches before the job's own rules.
 - Run release jobs only with `if: $CI_COMMIT_TAG =~ <tag-pattern>`.
 - Set `GIT_DEPTH: "0"` in release jobs. A tag pipeline fetches only the tag, so fetch `$CI_DEFAULT_BRANCH` before the ancestry check.
 - Protect the release tag pattern. Protected variables reach only protected refs.

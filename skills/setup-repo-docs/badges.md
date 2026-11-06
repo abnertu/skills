@@ -17,10 +17,13 @@ Put one row under the description, in this order. Add each badge when its subjec
 ## Host formats
 
 Prefer the host's native badge. Use shields.io where the host has none.
+When renaming a workflow, update its badge image URL, link and alt text together.
+Verify renamed workflow badges after their first default-branch run.
+URL-encode branch names in badge URLs and workflow-history filters.
 
 | Badge | Host | Image | Link |
 | --- | --- | --- | --- |
-| CI | GitHub | `https://github.com/<owner>/<repo>/actions/workflows/<file>/badge.svg?branch=<branch>` | `https://github.com/<owner>/<repo>/actions/workflows/<file>` |
+| CI | GitHub | `https://github.com/<owner>/<repo>/actions/workflows/<file>/badge.svg?branch=<branch>` | `https://github.com/<owner>/<repo>/actions/workflows/<file>?query=branch%3A<branch>` |
 | CI | GitLab | `https://<host>/<namespace>/<project>/badges/<branch>/pipeline.svg` | `https://<host>/<namespace>/<project>/-/pipelines?ref=<branch>` |
 | Release | GitHub | `https://img.shields.io/github/v/release/<owner>/<repo>` | `https://github.com/<owner>/<repo>/releases/latest` |
 | Release | GitLab | `https://<host>/<namespace>/<project>/-/badges/release.svg` | `https://<host>/<namespace>/<project>/-/releases` |
