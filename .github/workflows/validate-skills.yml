@@ -1,4 +1,4 @@
-name: Validate skills
+name: Validate Skills
 
 on:
   push:
@@ -10,12 +10,12 @@ permissions:
   contents: read
 
 jobs:
-  check:
-    name: Validate skill metadata and sentence checks
+  validate_skills:
+    name: Validate Skill Metadata and Sentence Checks
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - name: Check out source
+      - name: Check Out Source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -25,8 +25,8 @@ jobs:
           python3 -m venv "$RUNNER_TEMP/venv"
           "$RUNNER_TEMP/venv/bin/pip" install --quiet pyyaml==6.0.3
 
-      - name: Validate skill metadata and plugin manifests
+      - name: Validate Skill Metadata and Plugin Manifests
         run: '"$RUNNER_TEMP/venv/bin/python" scripts/check-skills.py'
 
-      - name: Test sentence checker
+      - name: Test Sentence Checker
         run: '"$RUNNER_TEMP/venv/bin/python" tests/test_check_sentences.py -v'
