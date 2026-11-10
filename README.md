@@ -2,7 +2,7 @@
 
 Personal agent skills. Each skill is a `SKILL.md` that Claude Code and other agents load.
 
-[![Validate Skills](https://github.com/abnertu/skills/actions/workflows/validate-skills.yml/badge.svg?branch=main)](https://github.com/abnertu/skills/actions/workflows/validate-skills.yml?query=branch%3Amain)
+[![Validate](https://github.com/abnertu/skills/actions/workflows/validate-skills.yml/badge.svg?branch=main)](https://github.com/abnertu/skills/actions/workflows/validate-skills.yml?query=branch%3Amain)
 
 ## Skills
 
