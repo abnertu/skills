@@ -5,7 +5,7 @@ argument-hint: "[codex] [task | status]"
 disable-model-invocation: true
 ---
 
-Take one change from plan to a verified done state. A review loop must **converge**: it ends on a **clean pass**, a review round with no in-scope finding.
+Take one change from plan to a verified done state. A review loop must **converge**: it ends on a **clean pass**, a full review round with no in-scope finding.
 
 A loop converges only against a fixed scope and fixed done criteria. A reviewer can always find more to improve. The scope decides which findings count.
 
@@ -75,30 +75,7 @@ Set **Review** before the first round. Record the reason in **Decisions**.
 - **full**: the plan has a decision that only the user can make, changes a public interface, crosses modules or has more than three steps.
 - **light**: all other plans. A child plan is light, unless it changes the scope, the done criteria or the decisions of its parent. Such a change is a change to the parent plan, as in step 4.
 
-A full review uses a reviewer with fresh context in each round: a subagent, or Codex with `codex`. If the runtime has no subagent, review the plan yourself in a separate pass. A light review is one pass by yourself. If the light pass finds a defect, fix it and set **Review** to `full`.
-
-Give the reviewer the plan file path and this instruction:
-
-> 1. Review this plan against the repo.
-> 2. Find missing steps, wrong assumptions about the code, done criteria that cannot be checked, unhandled failure cases, and conflicts with the repo's rules.
-> 3. For each finding, give the concrete failure that it causes.
-> 4. Tag each finding `defect`, `decision` or `backlog`.
-
-Sort each finding:
-
-- **Defect**: an in-scope problem with a concrete failure. Fix the plan.
-- **Decision**: a choice that only the user can make. Ask the user. Record the answer in **Decisions**.
-- **Backlog**: an improvement outside the scope, or a finding with no concrete failure. Add it to **Backlog**. It does not start a new round.
-
-Log each round in **Review log** with its finding counts. After you fix the defects, start a new round. The loop converges on a clean pass with no open decision.
-
-If five rounds pass without convergence:
-
-1. Stop.
-2. Show the user the open defects.
-3. Propose a split into smaller plans.
-
-A plan that does not converge is usually too large.
+A full review runs the [review loop](#review-loop) on the plan file. A light review is one pass by yourself. If the light pass finds a defect, fix it and set **Review** to `full`.
 
 Show the user the converged plan. After the user approves:
 
@@ -132,10 +109,9 @@ A change to the scope or the done criteria needs the user's approval.
 Set **Status** to `verifying`.
 
 1. Run the check of each done criterion. Record the evidence in the plan file. Fix each failure.
-2. Review the diff from **Base** against the plan, with a reviewer with fresh context. Use the same tags and the same sorting as in step 3.
-3. Fix each defect.
-   - A full plan repeats this step until a clean pass with all criteria checked.
-   - A light plan runs one review round. After the fixes, run the check of each done criterion again.
+2. Review the diff from **Base** against the plan:
+   - A full plan runs the [review loop](#review-loop) on the diff. The loop converges only when each done criterion has evidence.
+   - A light plan runs one full round. Fix each defect. Then run the check of each done criterion again.
 
 ## 6. Close
 
@@ -148,6 +124,52 @@ Set **Status** to `done`. Report to the user:
 The close is a session boundary.
 
 After you close the plan, answer a question about open problems from the plan files. A plan with status `done` has no open work. Report a new finding as a backlog item, and give its concrete failure.
+
+## Review loop
+
+A review loop reviews one subject: the plan file in step 3, or the diff from **Base** in step 5. It has two kinds of round:
+
+- **Full round**: a new reviewer with fresh context reviews the whole subject. Use a subagent, or Codex with `codex`.
+- **Delta round**: the reviewer of the last full round checks only the fixes since its last round.
+
+A delta round costs little, because the reviewer keeps its context and reads no file again. Only a full round can be a clean pass, because only a fresh reviewer is independent of the earlier rounds.
+
+1. Run a full round.
+2. If it is a clean pass with no open decision, the loop converges.
+3. Sort each finding as below.
+4. Run a delta round on the fixes. Repeat steps 3 and 4 until a delta round finds no defect, for at most three delta rounds.
+5. Go to step 1.
+
+Continue a reviewer with SendMessage in Claude Code, or with `--resume` for Codex. If the runtime cannot continue a reviewer, run the delta round yourself. If the runtime has no subagent, run each round yourself in a separate pass.
+
+If the fourth full round finds a defect:
+
+1. Stop.
+2. Show the user the open defects.
+3. Propose a split into smaller plans.
+
+A plan that does not converge is usually too large.
+
+Sort each finding:
+
+- **Defect**: an in-scope problem with a concrete failure. Fix it.
+- **Decision**: a choice that only the user can make. Ask the user. Record the answer in **Decisions**.
+- **Backlog**: an improvement outside the scope, or a finding with no concrete failure. Add it to **Backlog**. It stays out of this plan, unless the user adds it to the scope.
+
+Log each round in **Review log** in one line: its number, its kind, the reviewer and the finding counts. The plan and Git hold the fixes.
+
+Give a full-round reviewer the plan file path, the diff range for a diff review, and this instruction:
+
+> 1. Review the subject against the plan and the repo.
+> 2. Read the files that the plan names, and the code and tests that use them.
+> 3. Find every defect in this one pass: missing steps, wrong assumptions about the code, done criteria that cannot be checked or are not met, unhandled failure cases, and conflicts with the repo's rules.
+> 4. Treat **Decisions** and **Out of scope** as settled. Skip findings that **Backlog** holds.
+> 5. Write one line for each finding: its tag (`defect`, `decision` or `backlog`), its location and the concrete failure that it causes.
+> 6. Write only these lines.
+
+Give a delta-round reviewer the fixes, as a commit range or as a list of the plan edits, and this instruction:
+
+> Check these fixes. Find defects in each fix and in the parts of the subject that the fixes affect. Write the findings in the same format.
 
 ## Session boundaries
 
@@ -190,7 +212,7 @@ Ask the user in one question which model and which effort Codex uses. Offer the 
 
 Run Codex through the `codex:codex-rescue` subagent. Pass `--model <model> --effort <effort>` in each request.
 
-- **Review**: ask for a read-only run. Give the plan file path, the diff range for a code review, and the reviewer instruction from step 3.
+- **Review**: ask for a read-only run with the input of the [review loop](#review-loop). Pass `--fresh` for a full round and `--resume` for a delta round. `--resume` continues the last Codex thread. Fix the findings of a review yourself, so that the review thread stays the last thread.
 - **Delegated work**:
   1. Ask for a write run for one plan step.
   2. Give the step, the plan file path and the files that the step changes.
