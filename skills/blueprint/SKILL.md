@@ -16,7 +16,7 @@ Use this structure:
 ```markdown
 # <title>
 
-Status: planning | approved | implementing | verifying | done
+Status: planning | approved | implementing | verifying | done | cancelled
 Base: <commit at approval>
 Review: full | light
 Parent: <path of the parent blueprint, or none>
@@ -34,6 +34,8 @@ Parent: <path of the parent blueprint, or none>
 ## Backlog
 ## Review log
 ```
+
+A blueprint is **open** until its status is `done` or `cancelled`. Set `cancelled` when the user drops the blueprint or a split replaces it. Write the reason and the replacing blueprints in **Next**.
 
 The blueprint file is the single source of truth for progress. Update it after each step, review round and verification.
 
@@ -141,7 +143,7 @@ Set **Status** to `done`. Report to the user:
 
 The close is a session boundary.
 
-After you close the blueprint, answer a question about open problems from the blueprint files. A blueprint with status `done` has no open work. Report a new finding as a backlog item, and give its concrete failure.
+After you close the blueprint, answer a question about open problems from the blueprint files. A blueprint that is not open has no open work. Report a new finding as a backlog item, and give its concrete failure.
 
 ## Review
 
@@ -211,7 +213,7 @@ At each session boundary, judge whether the current session should continue. Jud
 
 ## Status report
 
-List each blueprint in `.blueprints/` with its status, its next action, its unchecked behaviors and its backlog size. If no blueprint is open, report that no blueprint is open.
+List each open blueprint in `.blueprints/` with its status, its next action, its unchecked behaviors and its backlog size. If no blueprint is open, report that no blueprint is open.
 
 ## Codex
 
